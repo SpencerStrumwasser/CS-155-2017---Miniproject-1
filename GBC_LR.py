@@ -25,6 +25,8 @@ train = np.array(train)
 train_X = train[:, :-1]
 train_y = train[:, -1]
 
+# Spit the data set into roughly 2 halfs
+# This allows us to not overfit with stacking
 train_x1 = train_X[:30000]
 train_x2 = train_X[30000:]
 
@@ -32,7 +34,9 @@ train_x2 = train_X[30000:]
 train_y1 = train_y[:30000]
 train_y2 = train_y[30000:]
 
-
+# We are first going to use Graident Boosting to transform
+# the data and then using One Hot Encoding.
+# After this, we will then try and fit a Logist Regression
 grd = GradientBoostingClassifier()
 grd_enc = OneHotEncoder()
 grd.fit(train_x1, train_y1)
@@ -43,7 +47,6 @@ grd_lm = LogisticRegression(penalty = 'l2', C = .0115)
 
 grd_lm.fit(grd_enc.transform(grd.apply(train_x2)[:,:, 0]), train_y2)
 
-y_pred_grd_lm = grd_lm.predict(grd_enc.transform(grd.apply(train_x1)[:, :, 0]))
 
 
 #Import test data
